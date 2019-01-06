@@ -71,12 +71,12 @@ static void node_link_head(jaxcache *cache, jaxlist *node)
 	cache->head = node;
 }
 
-static size_t get_index(jaxcache *cache, jaxlist *node, uintmax_t hash)
+static size_t get_index(jaxcache *cache, char *URL, uintmax_t hash)
 {
 	size_t index;
 	
 	index = hash / cache->capacity;
-	while(strcmp(node->URL, cache->hash_table[index]->URL) != 0 && cache->hash_table[index]) {
+	while(strcmp(URL, cache->hash_table[index]->URL) != 0 && cache->hash_table[index]) {
 		index++;
 		if (index == cache->capacity)
 			index = 0;
@@ -98,7 +98,7 @@ static void node_insert(jaxcache *cache, jaxlist *node)
 	size_t index;
 	
 	hash = get_hash(node->URL);
-	index = get_index(cache, node, hash);
+	index = get_index(cache, node->URL, hash);
 	cache->hash_table[index] = node;
 }
 
@@ -135,10 +135,26 @@ static void remove_cold(jaxcache *cache)
 	cache->tail = node->prev;
 	
 	hash = get_hash(node->URL);
-	index = get_index(cache, node, hash);
+	index = get_index(cache, node->URL, hash);
 	cache->hash_table[index] = NULL;
 	
 	node_delete(node);
+}
+
+static void splice_hot(jaxcache *cache, jaxlist *node)
+{
+	node->next->prev = node->prev;
+	node->prev->next = node->next;
+	
+	if (!node->next) {
+		if (node->prev)
+			cache->tail = node->prev;
+	}
+	
+	node->next = cache->head;
+	node->prev = NULL;
+	
+	cache->head = node;
 }
 
 int jaxcache_add(jaxcache *cache, char *URL, void *data, size_t data_size)
@@ -156,6 +172,21 @@ int jaxcache_add(jaxcache *cache, char *URL, void *data, size_t data_size)
 	cache->num_elem++;
 	
 	return 0;
+}
+
+void * jaxcache_lookup(jaxcache *cache, char *URL)
+{
+	uintmax_t hash;
+	size_t index;
+	jaxlist *node;
+	
+	hash = get_hash(URL);
+	index = get_index(cache, URL, hash);
+	node = cache->hash_table[index];
+	
+	splice_hot(cache, node);
+	
+	return node->data;
 }
 
 size_t jaxcache_capacity(jaxcache *cache)
