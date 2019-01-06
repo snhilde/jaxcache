@@ -8,7 +8,7 @@ typedef struct _jaxlist {
 
 struct _jaxcache {
 	jaxlist **hash;
-	jaxlist *head;
+	jaxlist *list;
 	size_t capacity;
 };
 
@@ -22,8 +22,8 @@ int jaxcache_create(jaxcache **cache, size_t capacity)
 	if (!(*cache)->hash)
 		return 1;
 	
-	(*cache)->head = malloc(sizeof(*(*cache)->head));
-	if (!(*cache)->head)
+	(*cache)->list = malloc(sizeof(*(*cache)->list));
+	if (!(*cache)->list)
 		return 1;
 	
 	(*cache)->capacity = capacity;
