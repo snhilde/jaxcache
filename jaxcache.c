@@ -189,6 +189,11 @@ void * jaxcache_lookup(jaxcache *cache, char *URL)
 	return node->data;
 }
 
+size_t jaxcache_num(jaxcache *cache)
+{
+	return cache->num_elem;
+}
+
 size_t jaxcache_capacity(jaxcache *cache)
 {
 	return cache->capacity;
