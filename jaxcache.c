@@ -28,6 +28,7 @@ int jaxcache_create(jaxcache **cache, size_t capacity)
 	(*cache)->head = NULL;
 	(*cache)->tail = NULL;
 	
+	(*cache)->size = 0;
 	(*cache)->capacity = capacity;
 	
 	return 0;
