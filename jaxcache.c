@@ -77,7 +77,7 @@ static size_t get_index(jaxcache *cache, char *URL, uintmax_t hash)
 	size_t index;
 	
 	index = hash / cache->capacity;
-	while(strcmp(URL, cache->hash_table[index]->URL) != 0 && cache->hash_table[index]) {
+	while(cache->hash_table[index] && strcmp(URL, cache->hash_table[index]->URL) != 0) {
 		index++;
 		if (index == cache->capacity)
 			index = 0;
@@ -144,18 +144,18 @@ static void remove_cold(jaxcache *cache)
 
 static void splice_hot(jaxcache *cache, jaxlist *node)
 {
-	node->next->prev = node->prev;
-	node->prev->next = node->next;
-	
-	if (!node->next) {
-		if (node->prev)
+	if (node->prev) {
+		if (node->next) {
+			node->next->prev = node->prev;
+			node->prev->next = node->next;
+		} else
 			cache->tail = node->prev;
-	}
 	
 	node->next = cache->head;
 	node->prev = NULL;
 	
 	cache->head = node;
+	}
 }
 
 int jaxcache_add(jaxcache *cache, char *URL, void *data, size_t data_size)
