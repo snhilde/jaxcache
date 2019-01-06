@@ -2,6 +2,7 @@
 
 typedef struct _jaxlist {
 	char *URL;
+	void *data;
 	struct _jaxlist *prev;
 	struct _jaxlist *next;
 } jaxlist;
