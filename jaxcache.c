@@ -30,3 +30,8 @@ int jaxcache_create(jaxcache **cache, size_t capacity)
 	
 	return 0;
 }
+
+size_t jaxcache_capacity(jaxcache *cache)
+{
+	return cache->capacity;
+}
