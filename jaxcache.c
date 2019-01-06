@@ -6,12 +6,9 @@ typedef struct _jaxlist {
 	struct _jaxlist *next;
 } jaxlist;
 
-typedef struct _jaxhash {
-	jaxlist **list;
-} jaxhash;
-
 struct _jaxcache {
-	jaxhash *hash;
+	jaxlist **hash;
+	jaxlist *head;
 };
 
 jaxcache * jaxcreate_cache(size_t size)
