@@ -1,7 +1,7 @@
-TARGET=jax_cache
+TARGET=jaxcache
 
 CC=gcc
-DRIVER=jax_driver.c
+DRIVER=main.c
 
 CFLAGS= -I. \
 		-Wall \
