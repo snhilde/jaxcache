@@ -31,6 +31,27 @@ int jaxcache_create(jaxcache **cache, size_t capacity)
 	return 0;
 }
 
+static void list_delete(jaxlist *head)
+{
+	jaxlist *node;
+	jaxlist *next;
+	
+	for (node = head; node; node = next) {
+		next = node->next;
+		free(node->URL);
+		free(node);
+	}
+}
+
+void jaxcache_destroy(jaxcache *cache)
+{
+	list_delete(cache->list);
+	
+	free(cache->hash);
+	free(cache->list);
+	free(cache);
+}
+
 size_t jaxcache_capacity(jaxcache *cache)
 {
 	return cache->capacity;
