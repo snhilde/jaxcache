@@ -9,23 +9,23 @@ typedef struct _jaxlist {
 struct _jaxcache {
 	jaxlist **hash;
 	jaxlist *head;
-};
+;
 
-jaxcache * jaxcache_create(size_t size)
+int jaxcache_create(jaxcache **cache, size_t capacity)
 {
-	jaxcache *cache;
+	*cache = malloc(sizeof(**cache));
+	if (!*cache)
+		return 1;
 	
-	cache = malloc(sizeof(*cache));
-	if (!cache)
-		return NULL;
+	(*cache)->hash = calloc(capacity, sizeof(*(*cache)->hash));
+	if (!(*cache)->hash)
+		return 1;
 	
-	cache->hash = calloc(size, sizeof(*cache->hash));
-	if (!cache->hash)
-		return NULL;
+	(*cache)->head = malloc(sizeof(*(*cache)->head));
+	if (!(*cache)->head)
+		return 1;
 	
-	cache->head = malloc(sizeof(*cache->head));
-	if (!cache->head)
-		return NULL;
+	(*cache)->capacity = capacity;
 	
-	return cache;
+	return 0;
 }

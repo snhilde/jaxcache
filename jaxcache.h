@@ -3,4 +3,4 @@
 
 typedef struct _jaxcache jaxcache;
 
-jaxcache * jaxcache_create(size_t max_capacity);
+int jaxcache_create(jaxcache **cache, size_t max_capacity);
