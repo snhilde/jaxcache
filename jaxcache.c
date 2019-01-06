@@ -9,7 +9,8 @@ typedef struct _jaxlist {
 struct _jaxcache {
 	jaxlist **hash;
 	jaxlist *head;
-;
+	size_t capacity;
+};
 
 int jaxcache_create(jaxcache **cache, size_t capacity)
 {
